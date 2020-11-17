@@ -25,7 +25,11 @@ router.get('/get-by-id/:id', function (req, res, next) {
     movieResponse = res;
     console.log(res);
     console.log('movie ID:' + movieID);
-    res.send(result);
+    if (result) res.status(200).send(result);
+    else {
+      console.log('error received:' + err);
+      res.status(500).send('error in retrieving the results !');
+    }
   });
 });
 
@@ -37,7 +41,11 @@ router.get('/get-by-query', function (req, res, next) {
 
   MovieDB.searchMovie({ query: searchQuery }, (err, result) => {
     console.log(result);
-    res.send(result);
+    if (result) res.status(200).send(result);
+    else {
+      console.log('error received:' + err);
+      res.status(500).send('error in retrieving the results !');
+    }
   });
 });
 
@@ -48,12 +56,13 @@ router.get('/get-by-query2', function (req, res, next) {
   const findMovie = async (searchQuery) => {
     const result = await moviedb.searchMovie(searchQuery);
     outerResponse = result;
-    res.send(JSON.stringify(outerResponse));
+    res.status(200).send(JSON.stringify(outerResponse));
   };
   try {
     const results = findMovie(searchQuery);
   } catch (e) {
     console.log('error while querying:: ' + e);
+    res.status(500).send(e);
   }
 });
 

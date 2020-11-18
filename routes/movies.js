@@ -3,6 +3,7 @@ var router = express.Router();
 const http = require('http');
 const https = require('https');
 const dotenv = require('dotenv');
+dotenv.config();
 
 // var Client = require('node-rest-client').Client;
 // var client = new Client();

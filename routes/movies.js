@@ -17,7 +17,7 @@ const { MovieDb } = require('moviedb-promise');
 const { constants } = require('buffer');
 const moviedb = new MovieDb(API_KEY);
 
-/* GET a movie by its unique ID. */
+/* GET a movie-info by its unique ID. */
 router.get('/get-by-id/:id', function (req, res, next) {
   var movieResponse;
   var movieID = req.params['id'];
@@ -66,11 +66,58 @@ router.get('/get-by-query2', function (req, res, next) {
   }
 });
 
+/* get list of all top-rated movies*/
+router.get('/get-toprated', function (req, res, next) {
+  var movieResp;
+  MovieDB.miscTopRatedMovies((err, result) => {
+    movieResp = res;
+    console.log(res);
+
+    if (result) res.status(200).send(result);
+    else {
+      console.log('error received:' + err);
+      res.status(500).send('error in retrieving top-rated movies!');
+    }
+  });
+});
+
+/* get images for movies by movie_id */
+router.get('/get-movie-images/:id', function (req, res, next) {
+  var movieimg;
+  var movieID = req.params['id'];
+  MovieDB.movieImages({ id: movieID }, (err, result) => {
+    movieimg = res;
+    console.log(res);
+    console.log('movie ID:' + movieID);
+    if (result) res.status(200).send(result);
+    else {
+      console.log('error received:' + err);
+      res.status(500).send('error in retrieving image for movie !');
+    }
+  });
+});
+
+/* get Movie-trailor for movies by movie_id */
+router.get('/get-movie-videos/:id', function (req, res, next) {
+  var movieVideo;
+  var movieID = req.params['id'];
+  MovieDB.movieTrailers({ id: movieID }, (err, result) => {
+    movieVideo = res;
+    console.log(res);
+    console.log('movie ID:' + movieID);
+    if (result) res.status(200).send(result);
+    else {
+      console.log('error received:' + err);
+      res.status(500).send('error in retrieving trailor for movie !');
+    }
+  });
+});
 /* marking movie as a favourite
 To-Do: actual function call
 */
-router.get('/account/:id/favorite', function (req, res, next) {
+router.get('/favorite/:id', function (req, res, next) {
   var movieResponse;
+
   var movieID = req.params['id'];
   console.log('movie ID provided to mark as a favorite: ' + movieID);
   MovieDB.accountFavoriteUpdate({ id: movieID }, (err, result) => {
@@ -85,7 +132,6 @@ router.get('/mark-fav/', function (req, res, next) {
   MovieDB.sessionId = SESSION_ID;
   MovieDB.accountMovieWatchlist('pranjalik')
     .then((res) => {
-      // Your watchlist items
       console.log(res);
     })
     .catch(console.error);

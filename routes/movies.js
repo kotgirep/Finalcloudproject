@@ -11,7 +11,10 @@ const API_KEY = process.env.MOVIESDB_API_KEY;
 const SESSION_ID = process.env.SESSION_ID;
 
 console.log('API_KEY: ' + API_KEY);
+console.log('SESSION_ID: ' + SESSION_ID);
+
 const MovieDB = require('moviedb')(API_KEY);
+
 const fetch = require('node-fetch');
 
 const { MovieDb } = require('moviedb-promise');
@@ -98,6 +101,22 @@ router.get('/get-movie-images/:id', function (req, res, next) {
   });
 });
 
+/* get movie review by movie_id */
+router.get('/get-movie-review/:id', function (req, res, next) {
+  var movierate;
+  var movieID = req.params['id'];
+  MovieDB.movieReviews({ id: movieID }, (err, result) => {
+    movierate = res;
+    console.log(res);
+    console.log('movie ID:' + movieID);
+    if (result) res.status(200).send(result);
+    else {
+      console.log('error received:' + err);
+      res.status(500).send('error in retrieving movie rating !');
+    }
+  });
+});
+
 /* get Movie-trailor for movies by movie_id */
 router.get('/get-movie-videos/:id', function (req, res, next) {
   var movieVideo;
@@ -113,28 +132,69 @@ router.get('/get-movie-videos/:id', function (req, res, next) {
     }
   });
 });
+/* Translations of movie by its movieId */
+router.get('/translations/:id', function (req, res, next) {
+  var movieTran;
+  var movieID = req.params['id'];
+  MovieDB.movieTranslations({ id: movieID }, (err, result) => {
+    movieTran = res;
+    console.log(res);
+    console.log('movie ID:' + movieID);
+    if (result) res.status(200).send(result);
+    else {
+      console.log('error received:' + err);
+      res.status(500).send('error in retriving translations of movie !');
+    }
+  });
+});
+
 /* marking movie as a favourite
 To-Do: actual function call
 */
-router.get('/favorite/:id', function (req, res, next) {
+router.post('/favorite', function (req, res, next) {
   var movieResponse;
 
-  var movieID = req.params['id'];
-  console.log('movie ID provided to mark as a favorite: ' + movieID);
-  MovieDB.accountFavoriteUpdate({ id: movieID }, (err, result) => {
+  MovieDB.accountFavoriteUpdate((err, result) => {
     movieResponse = res;
     console.log(res);
-    res.send(result);
+    if (result) res.status(200).send(result);
+    else {
+      console.log('error received:' + err);
+      res.status(500).send('error in marking movie as favorite !');
+    }
   });
-  res.send('movies data Favorite movie');
 });
 
-router.get('/mark-fav/', function (req, res, next) {
-  MovieDB.sessionId = SESSION_ID;
-  MovieDB.accountMovieWatchlist('pranjalik')
-    .then((res) => {
-      console.log(res);
-    })
-    .catch(console.error);
+router.post('/marcfav', function (req, res, next) {
+  console.log('mark favourite using requests method !!');
+  var request = require('request');
+
+  var movie_id = req.body.media_id;
+  var media_type = req.body.media_type; //should be "movie" for movies"
+
+  var options = {
+    method: 'POST',
+    url:
+      'https://api.themoviedb.org/3/account/{account_id}/favorite?api_key=' +
+      API_KEY +
+      '&session_id=' +
+      SESSION_ID,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      media_type: media_type,
+      media_id: movie_id,
+      favorite: true,
+    }),
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    else {
+      console.log(response.body);
+      res.status(200).send(response.body);
+    }
+  });
 });
+
 module.exports = router;

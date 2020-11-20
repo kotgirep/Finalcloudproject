@@ -190,7 +190,7 @@ router.post('/markfav', function (req, res, next) {
   });
 });
 
-/*GET all favourite movies*/
+/*GET all movies marked as favourite */
 router.get('/getallfav', function (req, res, next) {
   console.log('getting all favourite movies !!');
 
@@ -214,4 +214,68 @@ router.get('/getallfav', function (req, res, next) {
   });
 });
 
+/* Add Movie to Watchlist
+Example Request Body:
+{
+    "media_id":278,
+    "media_type":"movie"
+} */
+router.post('/add-watchlist', function (req, res, next) {
+  console.log('Adding movies to watchlist !!');
+
+  var movie_id = req.body.media_id;
+  var media_type = req.body.media_type;
+
+  var request = require('request');
+  var options = {
+    method: 'POST',
+    url:
+      'https://api.themoviedb.org/3/account/{account_id}/watchlist?api_key=' +
+      API_KEY +
+      '&session_id=' +
+      SESSION_ID,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      media_type: media_type,
+      media_id: movie_id,
+      watchlist: true,
+    }),
+  };
+  request(options, function (error, response) {
+    if (error) {
+      console.log('error ' + error);
+      res.status(500).send(error);
+    } else {
+      console.log('sucess !' + response.body);
+      res.status(200).send(response.body);
+    }
+  });
+});
+
+/*GET all movies added to watchlist*/
+router.get('/getall-watchlist-movies', function (req, res, next) {
+  console.log('getting all favourite movies !!');
+
+  var request = require('request');
+  var options = {
+    method: 'GET',
+    url:
+      'https://api.themoviedb.org/3/account/{account_id}/watchlist/movies?api_key=' +
+      API_KEY +
+      '&session_id=' +
+      SESSION_ID,
+    headers: {},
+  };
+  request(options, function (error, response) {
+    if (error) {
+      console.log('error ' + error);
+      res.status(500).send(error);
+    } else {
+      console.log('sucess !' + response.body);
+      res.status(200).send(response.body);
+    }
+  });
+});
 module.exports = router;

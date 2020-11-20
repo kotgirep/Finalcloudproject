@@ -165,7 +165,7 @@ router.post('/favorite', function (req, res, next) {
   });
 });
 
-router.post('/marcfav', function (req, res, next) {
+router.post('/markfav', function (req, res, next) {
   console.log('mark favourite using requests method !!');
   var request = require('request');
 
@@ -189,9 +189,11 @@ router.post('/marcfav', function (req, res, next) {
     }),
   };
   request(options, function (error, response) {
-    if (error) throw new Error(error);
-    else {
-      console.log(response.body);
+    if (error) {
+      console.log('error ' + error);
+      res.status(500).send(error);
+    } else {
+      console.log('sucess !' + response.body);
       res.status(200).send(response.body);
     }
   });

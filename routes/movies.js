@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var request = require('request');
+
 const http = require('http');
 const https = require('https');
 const dotenv = require('dotenv');
@@ -149,25 +151,14 @@ router.get('/translations/:id', function (req, res, next) {
 });
 
 /* marking movie as a favourite
-To-Do: actual function call
+Example Request Body:
+{
+    "media_id":278,
+    "media_type":"movie"
+}
 */
-router.post('/favorite', function (req, res, next) {
-  var movieResponse;
-
-  MovieDB.accountFavoriteUpdate((err, result) => {
-    movieResponse = res;
-    console.log(res);
-    if (result) res.status(200).send(result);
-    else {
-      console.log('error received:' + err);
-      res.status(500).send('error in marking movie as favorite !');
-    }
-  });
-});
-
 router.post('/markfav', function (req, res, next) {
   console.log('mark favourite using requests method !!');
-  var request = require('request');
 
   var movie_id = req.body.media_id;
   var media_type = req.body.media_type; //should be "movie" for movies"
@@ -187,6 +178,30 @@ router.post('/markfav', function (req, res, next) {
       media_id: movie_id,
       favorite: true,
     }),
+  };
+  request(options, function (error, response) {
+    if (error) {
+      console.log('error ' + error);
+      res.status(500).send(error);
+    } else {
+      console.log('sucess !' + response.body);
+      res.status(200).send(response.body);
+    }
+  });
+});
+
+/*GET all favourite movies*/
+router.get('/getallfav', function (req, res, next) {
+  console.log('getting all favourite movies !!');
+
+  var options = {
+    method: 'GET',
+    url:
+      'https://api.themoviedb.org/3/account/{account_id}/favorite/movies?api_key=' +
+      API_KEY +
+      '&session_id=' +
+      SESSION_ID,
+    headers: {},
   };
   request(options, function (error, response) {
     if (error) {

@@ -36,10 +36,24 @@ var moviesRouter = require('./routes/movies');
 var signupHandler = require('./routes/signup');
 var signinHandler = require('./routes/signin');
 var signoutHandler = require('./routes/signout');
+var deleteUserHandler = require("./routes/deleteuser");
+var verifyTokenHandler = require("./routes/verify");
 
+app.get("/", (req, res) => {
+    console.log("recieved signon request");
+    res.render('index');
+    return;
+});
 
+app.get("/dashboard", redirectGetRequestToPost);
 
-app.use('/', moviesclientRouter);
+app.post("/dashboard", verifyTokenHandler, (req, res) => {
+    console.log("recieved dashboard put request");
+    res.render('dashboard');
+    return;
+});
+
+//app.use('/', moviesclientRouter);
 app.use('/singlemoviearticle', moviesclientRouter);
 app.use('/ma', moviesclientRouter)
 app.use('/users', usersRouter);
@@ -47,7 +61,7 @@ app.use('/movies', moviesRouter);
 app.use('/signup', signupHandler);
 app.use('/signin', signinHandler);
 app.use('/signout', signoutHandler);
-
+app.use("/deleteuser", deleteUserHandler);
 
 
 
@@ -69,5 +83,10 @@ app.use(function(req, res, next) {
 //     res.status(err.status || 500);
 //     res.render('error');
 // });
+
+function redirectGetRequestToPost(req, res, next) {
+    res.render('gettoken');
+    return;
+}
 
 module.exports = app;

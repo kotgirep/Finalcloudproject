@@ -1,26 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cineverse Cloud Project</title>
-
-    <head rel="stylesheet" type="text/css" href="/styles.css">
+    <head>
+        <link href="css/styles.css" rel="stylesheet" type="text/css"></link>
         <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
               integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
               crossorigin="anonymous">
     </head>
-
     <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <h1 class="navbar-brand" style="color: cadetblue;font-size: 60px;text-align: -webkit-center">CINEVERSE</h1>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
-        </nav>
+</nav>
+<% if(isbm != null && isbm) { %>
+<div class="alert alert-success" role="alert">
+    This movie has been added to your WatchList!!
+</div>
+<% } %>
         <div class="wrapper">
             <div class="single-movie">
                 <a href="/singlemoviearticle"></a>
@@ -30,36 +32,19 @@
                     </h3>
                     <p style="color:indianred; font-size: 25px" ><u> Overview </u> </p>
                     <p style="font-size: 20px; font-family: 'Helvetica'"><%- singlemoviearticle.overview %></p>
-
                     <p style="color: indianred; font-size: 25px" ><u> Release Date </u> </p>
                     <p style="font-size: 20px;font-family: 'Helvetica'"><%- singlemoviearticle.release_date %></p>
-
                     <p style="color: indianred; font-size: 25px" ><u> Popularity </u> </p>
                     <p style="font-size: 20px;font-family: 'Helvetica'"><%- singlemoviearticle.popularity %></p>
-
                     <p style="color: indianred; font-size: 25px" ><u> Vote Count</u> </p>
                     <p style="font-size: 20px;font-family: 'Helvetica'"><%- singlemoviearticle.vote_count %></p>
-
-
-
-                   <button type="button" onclick="alert('You pressed the button!')"> like </button>
-                    <button type="button" onclick="alert('You pressed the button!')"> Buy </button>
-                  <!--  <form action="/bm" method="POST">
-                        <label for="fname">First name:</label>
-
-                        <label for="lname">Last name:</label>
-
-                        <input type="submit" value="Submit">
+                   <form action="/bm" method="POST">
+                        <button type="submit" style="background-color: honeydew; font: bold 14px Helvetica; color: cornflowerblue;width: 150px;padding:15px" autofocus>Buy</button>
                     </form>
--->
                     <% } else { %>
                         No posts found.
                         <% } %>
             </div>
         </div>
     </body>
-
-
-
-
 </html>

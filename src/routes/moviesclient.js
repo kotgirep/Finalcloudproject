@@ -1,95 +1,187 @@
-const express = require('express')
-const moviesclientRouter = express.Router()
-const axios = require('axios')
+const express = require('express');
+const moviesclientRouter = express.Router();
+const axios = require('axios');
+var email = '';
+var singlemovieinfo;
 
-moviesclientRouter.get('', async(req, res) => {
-    console.log("executing client.js")
-        //res.render('./movies')
-    try {
-        const getmovieAPI = await axios.get(`http://localhost:3000/movies/get-toprated`)
-            //console.log(getmovieAPI.data.results[0].title)
-            //console.log("result is " + res)
-        res.render('./movies', { moviearticle: getmovieAPI.data.results })
-            //console.log(getmovieAPI.data.results)
-            //console.log("moviearticle" +moviearticle)
-    } catch (err) {
-        if (err.response) {
-            console.log(err.response.data)
-        } else if (err.request) {
-            console.log(err.request)
-        } else {
-            console.error('error', err.message)
-        }
+/** Frontend tokens are passed here **/
+function initialize() {
+  console.log('-------In Initialize function-------');
+  email = 'supriyameduri@gmail.com';
+}
+initialize();
+
+/* function for onclickbuy */
+function onclickBuy() {
+  console.log('single movie article - onclickbuy ' + singlemoviearticle);
+}
+/* function for onclickfavorite */
+function onclickFavorite() {
+  console.log('single movie article - onclickFavorite ' + singlemoviearticle);
+}
+
+/* Function to get all the movies on home page*/
+moviesclientRouter.get('', async (req, res) => {
+  console.log('-------- inside getmovies function client side --------');
+  try {
+    const getmovieAPI = await axios.get(
+      `http://localhost:3000/movies/get-toprated`
+    );
+    res.render('./movies', { moviearticle: getmovieAPI.data.results });
+  } catch (err) {
+    if (err.response) {
+      console.log(err.response.data);
+    } else if (err.request) {
+      console.log(err.request);
+    } else {
+      console.error('error', err.message);
     }
-})
+  }
+});
 
-moviesclientRouter.get('/:id', async(req, res) => {
-    console.log("entering into getmovie details ")
-    let movieID = req.params.id
-        //res.render('./movies')
-    try {
-        const getmovieAPI = await axios.get(`http://localhost:3000/movies/get-toprated/${movieID}`)
-            //console.log(getmovieAPI.data.results[0].title)
-
-        res.render('./singlemovie', { singlemoviearticle: getmovieAPI.data })
-            // console.log(getmovieAPI.data.results)
-            //console.log("moviearticle" +moviearticle)
-    } catch (err) {
-        if (err.response) {
-            console.log(err.response.data)
-        } else if (err.request) {
-            console.log(err.request)
-        } else {
-            console.error('error', err.message)
-        }
+/*Function to get a single movie*/
+moviesclientRouter.get('/singlemoviearticle/:id', async (req, res) => {
+  console.log('-------- inside singlemovie function client side --------');
+  let movieID = req.params.id;
+  try {
+    const getmovieAPI = await axios.get(
+      `http://localhost:3000/movies/getsingleMovie/${movieID}`
+    );
+    singlemovieinfo = getmovieAPI.data;
+    res.render('./singlemovie', {
+      singlemoviearticle: getmovieAPI.data,
+      isbm: false,
+    });
+  } catch (err) {
+    if (err.response) {
+      console.log(
+        'error respnse data in single movie function client side is',
+        +err.response.data
+      );
+    } else if (err.request) {
+      console.log(
+        'error request in single movie function client side is' + err.request
+      );
+    } else {
+      console.error(
+        'error message in single movie function client side is',
+        err.message
+      );
     }
-})
+  }
+});
 
-
-moviesclientRouter.post('/ma', async(req, res) => {
-    console.log("/n inside search function /n ")
-    let query = req.body.search
-    console.log("query is " + query)
-
-    try {
-        const getmovieAPI = await axios.get(`http://localhost:3000/movies/searchbyKey?key=${query}`)
-        console.log("json data is " + getmovieAPI.data.results[0].title)
-
-        res.render('./movieSearch', { ma: getmovieAPI.data.results })
-
-    } catch (err) {
-        if (err.response) {
-            console.log(err.response.data)
-        } else if (err.request) {
-            console.log(err.request)
-        } else {
-            console.error('error', err.message)
-        }
+/*Function to get the searched movie */
+moviesclientRouter.post('/ma', async (req, res) => {
+  console.log('-------- inside search function client side --------');
+  let query = req.body.search;
+  try {
+    const getmovieAPI = await axios.get(
+      `http://localhost:3000/movies/searchbyKey?key=${query}`
+    );
+    res.render('./movieSearch', { ma: getmovieAPI.data.results });
+  } catch (err) {
+    if (err.response) {
+      console.log(err.response.data);
+    } else if (err.request) {
+      console.log(err.request);
+    } else {
+      console.error('error', err.message);
     }
-})
+  }
+});
 
-moviesclientRouter.post('/bm', async(req, res) => {
-    console.log("-------- inside buymovie client side --------")
-    let emailId="abc@gmail.com"
-    try {
-        const buyMovieRes = await axios.post(`http://localhost:3000/movies/buyMovie`,{
-            email_id: emailId,
-            id: req.body.id,
-            title: req.body.title
-        })
-        console.log("json data is " + buyMovieRes.data.results[0].title)
-
-        res.render('./singlemovie', { bm: buyMovieRes })
-
-    } catch (err) {
-        if (err.response) {
-            console.log(err.response.data)
-        } else if (err.request) {
-            console.log(err.request)
-        } else {
-            console.error('error', err.message)
-        }
+/*Function to buy a movie*/
+moviesclientRouter.post('/bm', async (req, res) => {
+  console.log('-------- inside buymovie function client side --------');
+  try {
+    const buyMovieRes = await axios.post(
+      `http://localhost:3000/movies/buyMovie`,
+      {
+        email_id: email,
+        id: singlemovieinfo.id,
+        title: singlemovieinfo.original_title,
+      }
+    );
+    res.render('./singlemovie', {
+      bm: buyMovieRes,
+      isbm: true,
+      singlemoviearticle: singlemovieinfo,
+    });
+  } catch (err) {
+    if (err.response) {
+      console.log(err.response.data);
+    } else if (err.request) {
+      console.log(err.request);
+    } else {
+      console.error('error', err.message);
     }
-})
+  }
+});
 
+/*Function to get watchlist*/
+moviesclientRouter.get('/getwatchlist', async (req, res) => {
+  console.log('--------- inside getwatchlist function client side -------- ');
+  try {
+    const getwatchlistAPI = await axios.get(
+      `http://localhost:3000/movies/getwatchList?emailId=${email}`
+    );
+    res.render('./watchList', { wl: getwatchlistAPI.data });
+  } catch (err) {
+    if (err.response) {
+      console.log(err.response.data);
+    } else if (err.request) {
+      console.log(err.request);
+    } else {
+      console.error('error', err.message);
+    }
+  }
+});
+/*Function to favorite a movie*/
+moviesclientRouter.post('/fm', async (req, res) => {
+  console.log(
+    '-------- inside mark movie as favorite function client side --------'
+  );
+  try {
+    const favMovieRes = await axios.post(
+      `http://localhost:3000/movies/favorite`,
+      {
+        email_id: email,
+        id: singlemovieinfo.id,
+        title: singlemovieinfo.original_title,
+      }
+    );
+    res.render('./singlemovie', {
+      fm: favMovieRes,
+      isbm: true,
+      singlemoviearticle: singlemovieinfo,
+    });
+  } catch (err) {
+    if (err.response) {
+      console.log(err.response.data);
+    } else if (err.request) {
+      console.log(err.request);
+    } else {
+      console.error('error', err.message);
+    }
+  }
+});
+/*Function to get all fav_list movies*/
+moviesclientRouter.get('/getfav', async (req, res) => {
+  console.log('--------- inside getwatchlist function client side -------- ');
+  try {
+    const getfavlistAPI = await axios.get(
+      `http://localhost:3000/movies/getfav?emailId=${email}`
+    );
+    res.render('./favlist', { fl: getfavlistAPI.data });
+  } catch (err) {
+    if (err.response) {
+      console.log(err.response.data);
+    } else if (err.request) {
+      console.log(err.request);
+    } else {
+      console.error('error', err.message);
+    }
+  }
+});
 module.exports = moviesclientRouter;

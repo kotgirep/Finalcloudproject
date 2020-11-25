@@ -2,22 +2,21 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 var mySQL = require('mysql');
-
 var pool = mySQL.createPool({
-    connectionLimit: 1000,
-    host: "cloud-project.cog0es3hfp6n.us-east-1.rds.amazonaws.com",
-    user: "admin",
-    password: "Awsproject"
+  connectionLimit: 1000,
+  connectTimeout: 60 * 60 * 1000,
+  acquireTimeout: 60 * 60 * 1000,
+  timeout: 60 * 60 * 1000,
+  host: 'cloud-project.cog0es3hfp6n.us-east-1.rds.amazonaws.com',
+  user: 'admin',
+  password: 'Awsproject',
 });
 const AWS = require('aws-sdk');
-
 const http = require('http');
 const https = require('https');
 const dotenv = require('dotenv');
 dotenv.config();
 
-// var Client = require('node-rest-client').Client;
-// var client = new Client();
 const API_KEY = process.env.MOVIESDB_API_KEY;
 const SESSION_ID = process.env.SESSION_ID;
 const MovieDB = require('moviedb')(API_KEY);
@@ -28,277 +27,131 @@ const { constants } = require('buffer');
 const moviedb = new MovieDb(API_KEY);
 
 /* GET a movie-info by its unique ID. */
-router.get('/get-toprated/:id', function(req, res, next) {
-    var movieResponse;
-    var movieID = req.params['id'];
-    MovieDB.movieInfo({ id: movieID }, (err, result) => {
-        movieResponse = res;
-        // console.log(res);
-        // console.log('movie ID:' + movieID);
-        if (result) res.status(200).send(result);
-        else {
-            console.log('error received:' + err);
-            res.status(500).send('error in retrieving the results !');
-        }
-    });
+router.get('/getsingleMovie/:id', function (req, res, next) {
+  console.log('-----Inside single movie function server.js------');
+  var movieResponse;
+  var movieID = req.params['id'];
+  MovieDB.movieInfo({ id: movieID }, (err, result) => {
+    movieResponse = res;
+    if (result) res.status(200).send(result);
+    else {
+      console.log(
+        '------error received in single movie function server side------:' + err
+      );
+      res.status(500).send('error in retrieving the single movie results !');
+    }
+  });
 });
 
 /* Search movie using keyword search for title*/
-router.get('/searchbyKey', function(req, res, next) {
-    var searchQuery = req.query.key;
-    // console.log('called search API end-point !');
-    console.log('search query for movie query operation: ' + searchQuery);
-
-    MovieDB.searchMovie({ query: searchQuery }, (err, result) => {
-        //console.log(result);
-        if (result) res.status(200).send(result);
-        else {
-            console.log('error received:' + err);
-            res.status(500).send('error in retrieving the results !');
-        }
-    });
-});
-
-router.get('/get-by-query2', function(req, res, next) {
-    var searchQuery = req.query.query;
-
-    var outerResponse = '';
-    const findMovie = async(searchQuery) => {
-        const result = await moviedb.searchMovie(searchQuery);
-        outerResponse = result;
-        res.status(200).send(JSON.stringify(outerResponse));
-    };
-    try {
-        const results = findMovie(searchQuery);
-    } catch (e) {
-        console.log('error while querying:: ' + e);
-        res.status(500).send(e);
+router.get('/searchbyKey', function (req, res, next) {
+  var searchQuery = req.query.key;
+  console.log('-----Inside search function server.js------');
+  MovieDB.searchMovie({ query: searchQuery }, (err, result) => {
+    if (result) res.status(200).send(result);
+    else {
+      console.log(
+        '------error received in search function server side------:' + err
+      );
+      res.status(500).send('error in retrieving the search results !');
     }
+  });
 });
 
 /* get list of all top-rated movies*/
-router.get('/get-toprated', function(req, res, next) {
-    var movieResp;
-    console.log("executing server.js")
-    MovieDB.miscTopRatedMovies((err, result) => {
-        movieResp = res;
-        //console.log("response is " +res);
-
-        if (result) res.status(200).send(result)
-        else {
-            console.log('error received:' + err);
-            res.status(500).send('error in retrieving top-rated movies!');
-        }
-    });
+router.get('/get-toprated', function (req, res, next) {
+  console.log('-----Inside get all movies server.js------');
+  var movieResp;
+  MovieDB.miscTopRatedMovies((err, result) => {
+    movieResp = res;
+    if (result) res.status(200).send(result);
+    else {
+      console.log(
+        '------error received in get movies function server side------:' + err
+      );
+      res.status(500).send('error in retrieving all the movie details!');
+    }
+  });
 });
 
-/* get images for movies by movie_id */
-router.get('/get-movie-images/:id', function(req, res, next) {
-    var movieimg;
-    var movieID = req.params['id'];
-    MovieDB.movieImages({ id: movieID }, (err, result) => {
-        movieimg = res;
-        // console.log(res);
-        // console.log('movie ID:' + movieID);
-        if (result) res.status(200).send(result);
-        else {
-            console.log('error received:' + err);
-            res.status(500).send('error in retrieving image for movie !');
-        }
-    });
+/* function to buy movie*/
+router.post('/buyMovie', function (req, res, next) {
+  console.log('-----Inside buymovie server.js------');
+  var email_id = 'supriyameduri@gmail.com';
+  var id = req.body.id;
+  var title = req.body.title;
+  pool.getConnection(function (err, connection) {
+    if (err) throw err;
+    connection.query(
+      'INSERT INTO `movies`.watch_list(email_id,movie_id,movie_title) values (?,?,?)',
+      [email_id, id, title],
+      function (err, result) {
+        connection.release();
+        if (err) {
+          console.log('Error inserting records in table' + err);
+        } else console.log('Row inserted');
+        return res.status(200).send('Added movie successfully');
+      }
+    );
+  });
 });
 
-/* get movie review by movie_id */
-router.get('/get-movie-review/:id', function(req, res, next) {
-    var movierate;
-    var movieID = req.params['id'];
-    MovieDB.movieReviews({ id: movieID }, (err, result) => {
-        movierate = res;
-        console.log(res);
-        console.log('movie ID:' + movieID);
-        if (result) res.status(200).send(result);
-        else {
-            console.log('error received:' + err);
-            res.status(500).send('error in retrieving movie rating !');
-        }
-    });
+/* function to get watchlist */
+
+router.get('/getwatchList', function (req, res, next) {
+  var email = req.query.emailId;
+  pool.getConnection(function (err, connection) {
+    if (err) throw err;
+    connection.query(
+      "select * from `movies`.watch_list where email_id='" + email + "'",
+      function (err, result) {
+        connection.release();
+        if (err) {
+          console.log('Error inserting records in table' + err);
+        } else console.log('Row inserted');
+        return res.status(200).json(result);
+      }
+    );
+  });
+});
+/* function to favorite movie*/
+router.post('/favorite', function (req, res, next) {
+  console.log('-----Inside favorite-movie server.js------');
+  var email_id = 'supriyameduri@gmail.com';
+  var id = req.body.id;
+  var title = req.body.title;
+  pool.getConnection(function (err, connection) {
+    if (err) throw err;
+    connection.query(
+      'INSERT INTO `movies`.fav_list(email_id,movie_id,movie_title) values (?,?,?)',
+      [email_id, id, title],
+      function (err, result) {
+        connection.release();
+        if (err) {
+          console.log('Error inserting records in table' + err);
+        } else console.log('Row inserted');
+        return res.status(200).send('Added movie as favorite successfully');
+      }
+    );
+  });
 });
 
-/* get Movie-trailor for movies by movie_id */
-router.get('/get-movie-videos/:id', function(req, res, next) {
-    var movieVideo;
-    var movieID = req.params['id'];
-    MovieDB.movieTrailers({ id: movieID }, (err, result) => {
-        movieVideo = res;
-        // console.log(res);
-        // console.log('movie ID:' + movieID);
-        if (result) res.status(200).send(result);
-        else {
-            console.log('error received:' + err);
-            res.status(500).send('error in retrieving trailor for movie !');
-        }
-    });
+/* function to get all favorite movies */
+
+router.get('/getfav', function (req, res, next) {
+  var email = req.query.emailId;
+  pool.getConnection(function (err, connection) {
+    if (err) throw err;
+    connection.query(
+      "select * from `movies`.fav_list where email_id='" + email + "'",
+      function (err, result) {
+        connection.release();
+        if (err) {
+          console.log('Error inserting records in table' + err);
+        } else console.log('Row inserted');
+        return res.status(200).json(result);
+      }
+    );
+  });
 });
-/* Translations of movie by its movieId */
-router.get('/translations/:id', function(req, res, next) {
-    var movieTran;
-    var movieID = req.params['id'];
-    MovieDB.movieTranslations({ id: movieID }, (err, result) => {
-        movieTran = res;
-        console.log(res);
-        console.log('movie ID:' + movieID);
-        if (result) res.status(200).send(result);
-        else {
-            console.log('error received:' + err);
-            res.status(500).send('error in retriving translations of movie !');
-        }
-    });
-});
-
-/* marking movie as a favourite
-Example Request Body:
-{
-    "media_id":278,
-    "media_type":"movie"
-}
-*/
-
-router.post('/markfav', function(req, res, next) {
-    console.log('mark favourite using requests method !!');
-
-    var movie_id = req.body.media_id;
-    var media_type = req.body.media_type; //should be "movie" for movies"
-
-    var options = {
-        method: 'POST',
-        url: 'https://api.themoviedb.org/3/account/{account_id}/favorite?api_key=' +
-            API_KEY +
-            '&session_id=' +
-            SESSION_ID,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            media_type: media_type,
-            media_id: movie_id,
-            favorite: true,
-        }),
-    };
-    request(options, function(error, response) {
-        if (error) {
-            console.log('error ' + error);
-            res.status(500).send(error);
-        } else {
-            console.log('sucess !' + response.body);
-            res.status(200).send(response.body);
-        }
-    });
-});
-
-/*GET all movies marked as favourite */
-router.get('/getallfav', function(req, res, next) {
-    console.log('getting all favourite movies !!');
-
-    var options = {
-        method: 'GET',
-        url: 'https://api.themoviedb.org/3/account/{account_id}/favorite/movies?api_key=' +
-            API_KEY +
-            '&session_id=' +
-            SESSION_ID,
-        headers: {},
-    };
-    request(options, function(error, response) {
-        if (error) {
-            console.log('error ' + error);
-            res.status(500).send(error);
-        } else {
-            console.log('sucess !' + response.body);
-            res.status(200).send(response.body);
-        }
-    });
-});
-
-/* Add Movie to Watchlist
-Example Request Body:
-{
-    "media_id":278,
-    "media_type":"movie"
-} */
-router.post('/add-watchlist', function(req, res, next) {
-    console.log('Adding movies to watchlist !!');
-
-    var movie_id = req.body.media_id;
-    var media_type = req.body.media_type; //="movie"
-
-    var request = require('request');
-    var options = {
-        method: 'POST',
-        url: 'https://api.themoviedb.org/3/account/{account_id}/watchlist?api_key=' +
-            API_KEY +
-            '&session_id=' +
-            SESSION_ID,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            media_type: media_type, //"movie"
-            media_id: movie_id,
-            watchlist: true,
-        }),
-    };
-    request(options, function(error, response) {
-        if (error) {
-            console.log('error ' + error);
-            res.status(500).send(error);
-        } else {
-            console.log('sucess !' + response.body);
-            res.status(200).send(response.body);
-        }
-    });
-});
-
-/*GET all movies added to watchlist*/
-router.get('/getall-watchlist-movies', function(req, res, next) {
-    console.log('getting all favourite movies !!');
-
-    var request = require('request');
-    var options = {
-        method: 'GET',
-        url: 'https://api.themoviedb.org/3/account/{account_id}/watchlist/movies?api_key=' +
-            API_KEY +
-            '&session_id=' +
-            SESSION_ID,
-        headers: {},
-    };
-    request(options, function (error, response) {
-        if (error) {
-            console.log('error ' + error);
-            res.status(500).send(error);
-        } else {
-            console.log('sucess !' + response.body);
-            res.status(200).send(response.body);
-        }
-    });
-})
-
-
-router.get('/buyMovie', function(req, res, next) {
-    var email_id = "supriyameduri@gmail.com";
-    var id = req.body.id;
-    var title = req.body.title;
-    pool.getConnection(function (err, connection) {
-        if (err) throw err;
-        console.log("Insert into RDS")
-        connection.query("INSERT INTO `movies`.watch_list(email_id,movie_id,movie_title) values (?,?,?)", [email_id, id, title],
-            function (err, result) {
-                connection.release();
-                if (err) {
-                    console.log("Error inserting records in table" + err);
-                } else
-                    console.log("Row inserted")
-                return res.status(500).send('Added movie successfully')
-            })
-    })
-})
-
 module.exports = router;

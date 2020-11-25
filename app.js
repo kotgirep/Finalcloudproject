@@ -4,10 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser')
-
-
-// var moviesclientRouter = require('./src/routes/moviesclient');
-
 var app = express();
 
 //static files
@@ -29,8 +25,6 @@ app.use(cookieParser());
 
 //routes
 var moviesclientRouter = require('./src/routes/moviesclient');
-
-//var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var moviesRouter = require('./routes/movies');
 var signupHandler = require('./routes/signup');
@@ -38,12 +32,6 @@ var signinHandler = require('./routes/signin');
 var signoutHandler = require('./routes/signout');
 var deleteUserHandler = require("./routes/deleteuser");
 var verifyTokenHandler = require("./routes/verify");
-
-app.get("/", (req, res) => {
-    console.log("recieved signon request");
-    res.render('index');
-    return;
-});
 
 app.get("/dashboard", redirectGetRequestToPost);
 
@@ -53,7 +41,12 @@ app.post("/dashboard", verifyTokenHandler, (req, res) => {
     return;
 });
 
-//app.use('/', moviesclientRouter);
+// app.get("/", (req, res) => {
+//     console.log("recieved signon request");
+//     res.render('index');
+//     return;
+// });
+app.use('/', moviesclientRouter);
 app.use('/singlemoviearticle', moviesclientRouter);
 app.use('/ma', moviesclientRouter)
 app.use('/users', usersRouter);
@@ -64,7 +57,6 @@ app.use('/signout', signoutHandler);
 app.use("/deleteuser", deleteUserHandler);
 
 
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     if (res.headersSent) {
@@ -73,16 +65,6 @@ app.use(function(req, res, next) {
     next(createError(404));
 });
 
-// error handler
-// app.use(function(err, req, res, next) {
-//     // set locals, only providing error in development
-//     res.locals.message = err.message;
-//     res.locals.error = req.app.get('env') === 'development' ? err : {};
-//
-//     // render the error page
-//     res.status(err.status || 500);
-//     res.render('error');
-// });
 
 function redirectGetRequestToPost(req, res, next) {
     res.render('gettoken');

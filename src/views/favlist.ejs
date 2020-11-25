@@ -3,31 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cineverse</title>
-    <head rel="stylesheet" type="text/css" href="css/styles.css">
+    <title>Cineverse Cloud Project</title>
+    <head>
+        <link href="css/styles.css" rel="stylesheet" type="text/css"></link>
         <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
               integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
               crossorigin="anonymous">
     </head>
-    <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
     <h1 class="navbar-brand" style="color: cadetblue;font-size: 60px;text-align: -webkit-center">CINEVERSE</h1>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    </nav>
-        <div class="row">
-            <% ma.forEach(function(ma,index) { %>
-                  <div class="col-sm-4">
-                      <div class="card" style="width: 18rem; margin-top: 1rem">
-                          <div class="card-body">
-                              <a href="/singlemoviearticle/<%- ma.id %>" >
-                                  <p style="font-size: 20px; font-family: 'Helvetica';color: dodgerblue" class="card-text"><%- ma.title %></p>
-                              </a>
-                          </div>
-                      </div>
-                  </div>
-            <%  }) %>
-        </div>
-    </body>
+</nav>
+<h3 style="text-align:center;color:cornflowerblue ;font-size: 30px;font-family: 'Helvetica'"> ***FAV-LIST*** </h3>
+<table class="table table-striped" style =" border: 1px solid black;margin: auto">
+    <thead >
+        <tr>
+            <th>Movie Id</th>
+            <th>Movie Title</th>
+        </tr>
+    </thead>
+    <tbody>
+            <% fl.forEach(function(fl, index) { %>
+            <tr>
+            <td><%- fl.movie_id %></td>
+            <td><%- fl.movie_title%></td>
+            </tr>
+            <% }) %>
+    </tbody>
+    </table>
+</body>
+</html>
+</thead>

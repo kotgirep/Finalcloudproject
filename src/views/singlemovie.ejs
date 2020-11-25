@@ -20,7 +20,7 @@
 </nav>
 <% if(isbm != null && isbm) { %>
 <div class="alert alert-success" role="alert">
-    This movie has been added to your WatchList!!
+    This movie has been added to your List!!
 </div>
 <% } %>
         <div class="wrapper">
@@ -41,10 +41,15 @@
                    <form action="/bm" method="POST">
                         <button type="submit" style="background-color: honeydew; font: bold 14px Helvetica; color: cornflowerblue;width: 150px;padding:15px" autofocus>Buy</button>
                     </form>
+                    <form action="/fm" method="POST">
+                        <button type="submit" style="background-color: honeydew; font: bold 14px Helvetica; color: cornflowerblue;width: 150px;padding:15px" autofocus>Favorite</button>
+                    </form>
                     <% } else { %>
                         No posts found.
                         <% } %>
             </div>
         </div>
+        
+        
     </body>
 </html>

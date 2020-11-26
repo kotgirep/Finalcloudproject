@@ -9,35 +9,41 @@ AWS.config.update({
   secretAccessKey: process.env["SECRET_ACCESS_KEY"],
 });
 
-
 function signInUser(req, res, next) {
-    const cognito = new AWS.CognitoIdentityServiceProvider();
-    var input = {
-      AuthFlow: 'USER_PASSWORD_AUTH', 
-      ClientId: process.env["CLIENT_ID"],
-      AuthParameters:{
-          'USERNAME': req.body.email,
-          'PASSWORD': req.body.password
-        }
-    };
-  
-    cognito.initiateAuth(input, function (err, data) {
-        console.log(data);
-      if (err) {
-        console.log("Unable to login! Error: " + JSON.stringify(err));
-        res.status(404).json({
-          err: "Failed to Login!",
-        });
-      } else {
-        console.log("Login is successful!");
-        res.status(200).json({
-          message: "Login is successful!",
-        });
-      }
-      return next();
-    });
-  }
-  
-  router.post("/", signInUser);
-  
-  module.exports = router;
+  const cognito = new AWS.CognitoIdentityServiceProvider();
+  var input = {
+    AuthFlow: "USER_PASSWORD_AUTH",
+    ClientId: process.env["CLIENT_ID"],
+    AuthParameters: {
+      USERNAME: req.body.email,
+      PASSWORD: req.body.password,
+    },
+  };
+
+  cognito.initiateAuth(input, function (err, data) {
+    if (err) {
+      console.log("Unable to login! Error: " + JSON.stringify(err));
+      res.render("index", { signInErrMsg: err.message });
+    } else {
+      console.log(data);
+      console.log("Login is successful!");
+      res.render("savetoken", {
+        accessToken: data.AuthenticationResult.AccessToken,
+        refreshToken: data.AuthenticationResult.RefreshToken,
+        idToken: data.AuthenticationResult.IdToken,
+      });
+    }
+    return next();
+  });
+}
+
+router.post("/", signInUser);
+
+router.get("/", redirectGetRequestToPost);
+
+function redirectGetRequestToPost(req, res, next) {
+  res.render("gettoken");
+  return;
+}
+
+module.exports = router;

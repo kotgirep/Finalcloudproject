@@ -9,30 +9,30 @@ AWS.config.update({
   secretAccessKey: process.env["SECRET_ACCESS_KEY"],
 });
 
-function signOut(req, res, next) {
-  console.log('access token: ' + req.get('access-token'));  
+function deleteUser(req, res, next) {
   const cognito = new AWS.CognitoIdentityServiceProvider();
   var input = {
-    AccessToken: req.get('access-token')
+    UserPoolId: process.env["USER_POOL_ID"],
+    Username: req.body.email
   };
 
-  cognito.globalSignOut(input, function (err, data) {
+  cognito.adminDeleteUser(input, function (err, data) {
     console.log(data);
     if (err) {
-      console.log("Unable to logout! Error: " + JSON.stringify(err));
+      console.log("Unable to delete user! Error: " + JSON.stringify(err));
       res.status(404).json({
-        err: "Failed to Sign out!",
+        err: "Failed to delete user!",
       });
     } else {
-      console.log("Logout is successful!");
+      console.log("Successfully deleted user!");
       res.status(200).json({
-        message: "Sign out is successful!",
+        message: "Successfully deleted user!",
       });
     }
     return next();
   });
 }
 
-router.post("/", signOut);
+router.post("/", deleteUser);
 
 module.exports = router;

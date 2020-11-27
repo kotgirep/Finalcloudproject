@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $.ajax({
-        url: "/dashboard/",
+        url: "/dashboard",
         type: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -9,7 +9,7 @@ $(document).ready(function () {
             "id-token": window.localStorage.getItem('id-token'),
         },
         success: function (data) {
-            console.log("entered success");
+            console.log("entered success in gettoken");
             document.open();
             document.write(data);
             document.close();

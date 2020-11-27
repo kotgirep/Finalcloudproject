@@ -10,6 +10,7 @@ AWS.config.update({
 });
 
 function signInUser(req, res, next) {
+  console.log("entered sign in");
   const cognito = new AWS.CognitoIdentityServiceProvider();
   var input = {
     AuthFlow: "USER_PASSWORD_AUTH",

@@ -22,49 +22,34 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-
 //routes
-var moviesclientRouter = require('./src/routes/moviesclient');
-var usersRouter = require('./routes/users');
+var dashboardRouter = require('./routes/dashboard');
 var moviesRouter = require('./routes/movies');
 var signupHandler = require('./routes/signup');
 var signinHandler = require('./routes/signin');
 var signoutHandler = require('./routes/signout');
 var deleteUserHandler = require("./routes/deleteuser");
-var verifyTokenHandler = require("./routes/verify");
 
-app.get("/dashboard", redirectGetRequestToPost);
-
-app.post("/dashboard", verifyTokenHandler, (req, res) => {
-    console.log("recieved dashboard put request");
-    res.render('dashboard');
+app.get('/', function (req, res, next) {
+    console.log("entered index");
+    res.render('index');
     return;
 });
-
-// app.get("/", (req, res) => {
-//     console.log("recieved signon request");
-//     res.render('index');
-//     return;
-// });
-app.use('/', moviesclientRouter);
-app.use('/singlemoviearticle', moviesclientRouter);
-app.use('/ma', moviesclientRouter)
-app.use('/users', usersRouter);
+app.use('/dashboard', dashboardRouter);
 app.use('/movies', moviesRouter);
 app.use('/signup', signupHandler);
 app.use('/signin', signinHandler);
 app.use('/signout', signoutHandler);
 app.use("/deleteuser", deleteUserHandler);
 
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     if (res.headersSent) {
         return;
     }
-    next(createError(404));
+    createError(404);
+    next();
 });
-
 
 function redirectGetRequestToPost(req, res, next) {
     res.render('gettoken');

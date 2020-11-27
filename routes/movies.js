@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var request = require('request');
+var verifyTokenHandler = require("./verify");
 var mySQL = require('mysql');
 var pool = mySQL.createPool({
   connectionLimit: 1000,
@@ -27,13 +28,16 @@ const { constants } = require('buffer');
 const moviedb = new MovieDb(API_KEY);
 
 /* GET a movie-info by its unique ID. */
-router.get('/getsingleMovie/:id', function (req, res, next) {
-  console.log('-----Inside single movie function server.js------');
-  var movieResponse;
-  var movieID = req.params['id'];
+router.post('/getsingleMovie', verifyTokenHandler, function (req, res, next) {
+  console.log('-----Inside single movie function server.js------: ' + req.body.id);
+  var movieID = req.body.id;
   MovieDB.movieInfo({ id: movieID }, (err, result) => {
-    movieResponse = res;
-    if (result) res.status(200).send(result);
+    if (result) {
+      // res.status(200).send(result);
+      res.render('singlemovie', {
+        singlemoviearticle: result
+      });
+    }
     else {
       console.log(
         '------error received in single movie function server side------:' + err
@@ -44,11 +48,16 @@ router.get('/getsingleMovie/:id', function (req, res, next) {
 });
 
 /* Search movie using keyword search for title*/
-router.get('/searchbyKey', function (req, res, next) {
-  var searchQuery = req.query.key;
+router.post('/searchbyKey', verifyTokenHandler, function (req, res, next) {
+  var searchQuery = req.body.movieTitle;
   console.log('-----Inside search function server.js------');
-  MovieDB.searchMovie({ query: searchQuery }, (err, result) => {
-    if (result) res.status(200).send(result);
+  MovieDB.searchMovie({ query: searchQuery }, (err, data) => {
+    if (data) {
+      console.log(data);
+      // res.status(200).send(data);
+      //res.render('movieSearch', { ma: data.results });
+      res.render('movies', { moviearticle: data.results });
+    }
     else {
       console.log(
         '------error received in search function server side------:' + err
@@ -58,26 +67,11 @@ router.get('/searchbyKey', function (req, res, next) {
   });
 });
 
-/* get list of all top-rated movies*/
-router.get('/get-toprated', function (req, res, next) {
-  console.log('-----Inside get all movies server.js------');
-  var movieResp;
-  MovieDB.miscTopRatedMovies((err, result) => {
-    movieResp = res;
-    if (result) res.status(200).send(result);
-    else {
-      console.log(
-        '------error received in get movies function server side------:' + err
-      );
-      res.status(500).send('error in retrieving all the movie details!');
-    }
-  });
-});
 
 /* function to buy movie*/
-router.post('/buyMovie', function (req, res, next) {
+router.post('/buyMovie', verifyTokenHandler, function (req, res, next) {
   console.log('-----Inside buymovie server.js------');
-  var email_id = 'supriyameduri@gmail.com';
+  var email_id = req.body.userName;
   var id = req.body.id;
   var title = req.body.title;
   pool.getConnection(function (err, connection) {
@@ -97,9 +91,8 @@ router.post('/buyMovie', function (req, res, next) {
 });
 
 /* function to get watchlist */
-
-router.get('/getwatchList', function (req, res, next) {
-  var email = req.query.emailId;
+router.post('/getwatchList', verifyTokenHandler, function (req, res, next) {
+  var email = req.body.userName;
   pool.getConnection(function (err, connection) {
     if (err) throw err;
     connection.query(
@@ -109,15 +102,17 @@ router.get('/getwatchList', function (req, res, next) {
         if (err) {
           console.log('Error inserting records in table' + err);
         } else console.log('Row inserted');
-        return res.status(200).json(result);
+        console.log(result);
+        return res.render('watchList', { wl: result });
+        //return res.status(200).json(result);
       }
     );
   });
 });
 /* function to favorite movie*/
-router.post('/favorite', function (req, res, next) {
+router.post('/favorite', verifyTokenHandler, function (req, res, next) {
   console.log('-----Inside favorite-movie server.js------');
-  var email_id = 'supriyameduri@gmail.com';
+  var email_id = req.body.userName;
   var id = req.body.id;
   var title = req.body.title;
   pool.getConnection(function (err, connection) {
@@ -137,9 +132,8 @@ router.post('/favorite', function (req, res, next) {
 });
 
 /* function to get all favorite movies */
-
-router.get('/getfav', function (req, res, next) {
-  var email = req.query.emailId;
+router.post('/getfav', verifyTokenHandler, function (req, res, next) {
+  var email = req.body.userName;
   pool.getConnection(function (err, connection) {
     if (err) throw err;
     connection.query(
@@ -149,7 +143,8 @@ router.get('/getfav', function (req, res, next) {
         if (err) {
           console.log('Error inserting records in table' + err);
         } else console.log('Row inserted');
-        return res.status(200).json(result);
+        return res.render('./favlist', { fl: result });
+        //return res.status(200).json(result);
       }
     );
   });

@@ -20,4 +20,10 @@ $(document).ready(function () {
     if ($("#signUpErrMsg").text().trim() == "") {
       $("#signUpErrMsg").hide();
     }
+    if ($("#signInErrMsg").text().trim() == "") {
+      $("#signInErrMsg").hide();
+    }
+    if ($("#msg").text().trim() == "") {
+      $("#msg").hide();
+    }
   });

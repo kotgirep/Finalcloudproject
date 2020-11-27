@@ -1,16 +1,11 @@
-<!DOCTYPE html>
-<html>
-
 <head>
-    <title>Login Form</title>
-    <link rel="stylesheet" type="text/css" href="/css/styles.css">
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
+    </link>
+    <link href="/css/index.css" rel="stylesheet" type="text/css">
 </head>
 
-<body class="custom-body-style">
+<body>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -23,90 +18,99 @@
     <!-- End of bootstrap JS-->
     <script src="/js/index.js"></script>
 
-    <br><br><br><br>
-    <div class="d-flex justify-content-center">
-        <div class="border rounded-lg bg-white custom-padding" id="signInUserDiv">
-            <form id="signInUser" name="formSignInUser" method="post" action="/signin/">
-                <table>
-                    <tr>
-                        <td> <input class="form-control" type="text" name="email" id="signInEmail" placeholder="Email">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input class="form-control" type="Password" name="password" id="signInPswd"
-                                placeholder="Password">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><button type="submit" class="btn btn-primary btn-block" name="login" id="login"> Log In
-                            </button> </td>
+    <section class="container">
+        <div class="left-half">
+            <div id="top">
+                <h1 style="font-size: 5.5rem; font-family: Impact, 'Arial Narrow Bold';">Cineverse</h1>
+            </div>
+            <article>
+            </article>
+        </div>
+        <div class="right-half" style="text-align: -webkit-center;">
+            <article>
+                <div id="signInUserDiv">
+                    <form id="signInUser" name="formSignInUser" method="post" action="/signin/">
 
-                    <tr>
-                        <td>
-                            <hr>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><button type="button" class="btn btn-outline-success" name="showSignUp"
-                                id="showSignUp">Create New
-                                Account</button></td>
-                    </tr>
+                        <table class="inner-table">
+                            <tr>
+                                <td> <input class="form-control form-control-lg" type="text" name="email" id="signInEmail"
+                                        placeholder="Email">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input class="form-control form-control-lg" type="Password" name="password" id="signInPswd"
+                                        placeholder="Password">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><button type="submit" class="btn btn-warning btn-block btn-lg" name="login" id="login"> Log
+                                        In
+                                    </button> </td>
+                            <tr>
+                                <td>
+                                    <hr color="white">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><button type="button" class="btn btn-outline-success btn-block btn-lg" name="showSignUp"
+                                        id="showSignUp">Create New
+                                        Account</button></td>
+                            </tr>
+                        </table>
+                    </form>
+                    <div id="signInErrMsg" class="font-italic" style="color: #3F3D56">
+                        <%= typeof signInErrMsg!='undefined' ? signInErrMsg : '' %> </div>
+                    <div id="msg" class="font-italic text-white"> <%= typeof msg!='undefined' ? msg : '' %> </div>
 
+                </div>
 
-                </table>
+                <div id="signUpUserDiv" style="display: none;">
+                    <form id="signUpUser" name="formSignUpUser" method="post" action="/signup/">
+                        <table class="inner-table">
+                            <tr>
+                                <td> <input class="form-control form-control-lg" type="text" name="email" id="signupemail"
+                                        placeholder="Email">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input class="form-control form-control-lg" type="Password" name="password" id="signuppswd"
+                                        placeholder="Password">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input class="form-control form-control-lg" type="Password" name="confirmpswd" id="confirmpswd"
+                                        placeholder="Confirm Password">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><button type="submit" class="btn btn-warning btn-block btn-lg" name="newaccount"
+                                        id="newaccount">
+                                        Create New
+                                        Account
+                                    </button> </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <hr color="white">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><button type="button" class="btn btn-outline-success btn-block btn-lg" name="showLogIn"
+                                        id="showLogIn"> Log
+                                        In </button></td>
+                            </tr>
 
-            </form>
+                        </table>
+                    </form>
 
+                    <div id="signUpMsg" class="font-italic text-white">
+                        <%= typeof signUpMsg!='undefined' ? signUpMsg : '' %> </div>
+                    <div id="signUpErrMsg" class="font-italic" style="color: #3F3D56">
+                        <%= typeof signUpErrMsg!='undefined' ? signUpErrMsg : '' %> </div>
+
+                </div>
+            </article>
         </div>
 
-        <div class="border rounded-lg bg-white custom-padding" id="signUpUserDiv" style="display: none;">
-            <form id="signUpUser" name="formSignUpUser" method="post" action="/signup/">
-                <table>
-                    <tr>
-                        <td> <input class="form-control" type="text" name="email" id="signupemail" placeholder="Email">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input class="form-control" type="Password" name="password" id="signuppswd"
-                                placeholder="Password">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><input class="form-control" type="Password" name="confirmpswd" id="confirmpswd"
-                                placeholder="Confirm Password">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><button type="submit" class="btn btn-primary btn-block" name="newaccount" id="newaccount">
-                                Create New
-                                Account
-                            </button> </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <hr>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><button type="button" class="btn btn-outline-success" name="showLogIn" id="showLogIn"> Log
-                                In </button></td>
-                    </tr>
-
-                </table>
-            </form>
-
-        </div>
-    </div>
-    <div id="msgBlock">
-        <br>
-        <div id="signUpMsg" class="font-italic text-white"> <%= typeof signUpMsg!='undefined' ? signUpMsg : '' %> </div>
-        <div id="signUpErrMsg" class="font-italic text-danger">
-            <%= typeof signUpErrMsg!='undefined' ? signUpErrMsg : '' %> </div>
-        <div id="signInErrMsg" class="font-italic text-danger">
-            <%= typeof signInErrMsg!='undefined' ? signInErrMsg : '' %> </div>
-        <div id="msg" class="font-italic text-white"> <%= typeof msg!='undefined' ? msg : '' %> </div>
-    </div>
-
+    </section>
 </body>
-
-</html>

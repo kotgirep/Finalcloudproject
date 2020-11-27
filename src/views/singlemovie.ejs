@@ -12,26 +12,10 @@
               crossorigin="anonymous">
     </head>
     <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <h1 class="navbar-brand" style="color: cadetblue;font-size: 60px;text-align: -webkit-center">CINEVERSE</h1>
-    <ul style="color:white; float: right;" class="nav navbar-nav">
-        <li><a href="/ma">Homepage- </a> </li>
-
-        <li><a href="/getfav">-Favorites- </a></li>
-
-        <li><a href="/getwatchList">-Watchlist </a>  </li>
-
-    </ul>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</nav>
-<% if(isbm != null && isbm) { %>
-<div class="alert alert-success" role="alert">
-    This movie has been added to your List!!
-</div>
-<% } %>
-        <div class="wrapper">
+        <div class="wrapper" style="padding: 20px;">
+            <div class="alert alert-success" role="alert" id="actionAlert" style="display: none;">
+            </div>
+            
             <div class="single-movie">
                 <a href="/singlemoviearticle"></a>
                 <% if(singlemoviearticle != null) { %>
@@ -46,12 +30,16 @@
                     <p style="font-size: 20px;font-family: 'Helvetica'"><%- singlemoviearticle.popularity %></p>
                     <p style="color: indianred; font-size: 25px" ><u> Vote Count</u> </p>
                     <p style="font-size: 20px;font-family: 'Helvetica'"><%- singlemoviearticle.vote_count %></p>
-                   <form action="/bm" method="POST">
-                        <button type="submit" style="background-color: honeydew; font: bold 14px Helvetica; color: cornflowerblue;width: 150px;padding:15px" autofocus>Buy</button>
-                    </form>
-                    <form action="/fm" method="POST">
-                        <button type="submit" style="background-color: honeydew; font: bold 14px Helvetica; color: cornflowerblue;width: 150px;padding:15px" autofocus>Favorite</button>
-                    </form>
+                    <input type="hidden" id="id" value="<%- singlemoviearticle.id %>">
+                    <input type="hidden" id="original_title" value="<%- singlemoviearticle.original_title %>">
+                    <button type="button"
+                        style="background-color: honeydew; font: bold 14px Helvetica; color: cornflowerblue;width: 150px;padding:15px"
+                        movie-id="<%- singlemoviearticle.id %>" movie-title="<%- singlemoviearticle.original_title %>"
+                        onclick="buy(this.getAttribute('movie-id'), this.getAttribute('movie-title'))" autofocus>Buy</button>
+                    <button type="button"
+                        style="background-color: honeydew; font: bold 14px Helvetica; color: cornflowerblue;width: 150px;padding:15px"
+                        movie-id="<%- singlemoviearticle.id %>" movie-title="<%- singlemoviearticle.original_title %>"
+                        onclick="favorite(this.getAttribute('movie-id'), this.getAttribute('movie-title'))" autofocus>Favorite</button>
                     <% } else { %>
                         No posts found.
                         <% } %>

@@ -68,12 +68,11 @@ function verifyToken(req, res, next) {
           res.render('index', { signInErrMsg: "Invalid session! Please login again!" });
           return; 
         }
-
-      // Verified token successfully!
-      console.log("Successfully verified token!");
-      next();
-
-
+        // Verified token successfully!
+        console.log("Successfully verified token!");
+        // populate request with user's email address
+        req.body.userName = data.Username;
+        next();
       });
     });
   });

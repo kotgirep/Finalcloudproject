@@ -20,6 +20,17 @@
         <script src="/js/movies.js"></script>
     </head>
 <body>
+    <script src="https://dmhgztv9c2lbn.cloudfront.net/lex-web-ui-loader.min.js"></script>
+<script>
+  var loaderOpts = {
+    baseUrl: 'https://dmhgztv9c2lbn.cloudfront.net/',
+    shouldLoadMinDeps: true
+  };
+  var loader = new ChatBotUiLoader.IframeLoader(loaderOpts);
+  loader.load()
+    .catch(function (error) { console.error(error); });
+</script>
+  
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <h1 style="color: #00B0FF; font-size: 5.5rem; font-family: Impact, 'Arial Narrow Bold';"> Cineverse </h1>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -52,6 +63,7 @@
         <div class="col-3">
             <div class="card" style="width: 18rem; margin-top: 1rem;">
                     <a href="#" id="movieId" onclick="getSingleMovie(this.getAttribute('movie-id'));" movie-id="<%- moviearticle.id %>">
+                        <!-- Added images with title in the home page-->
                         <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/<%- moviearticle.poster_path %>" alt="<%- moviearticle.title %>">
                     </a>
                         <div class="card-body">

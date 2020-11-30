@@ -1,0 +1,12 @@
+service: my-bot
+frameworkVersion: '2'
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+functions:
+  movieInfo:
+    handler: handler.movieInfo
+  moviesByGenre:
+    handler: handler.moviesByGenre
+

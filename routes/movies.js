@@ -149,4 +149,20 @@ router.post('/getfav', verifyTokenHandler, function (req, res, next) {
     );
   });
 });
+
+router.post('/getTrailer', verifyTokenHandler, function(req, res, next) {
+  console.log("Inside get movie trailer function")
+  var movieID = req.body.id;
+  MovieDB.movieTrailers({ id: movieID }, (err, result) => {
+    console.log(result);
+    // console.log('movie ID:' + movieID);
+    if (result) res.status(200).render('getTrailer',{gt:result});
+    else {
+      console.log('error received:' + err);
+      res.status(500).send('error in retrieving trailor for movie !');
+      //return res.render('getTrailer',{gt:result});
+    }
+  });
+});
+
 module.exports = router;

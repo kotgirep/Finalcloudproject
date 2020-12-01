@@ -40,6 +40,10 @@
                         style="background-color: honeydew; font: bold 14px Helvetica; color: cornflowerblue;width: 150px;padding:15px"
                         movie-id="<%- singlemoviearticle.id %>" movie-title="<%- singlemoviearticle.original_title %>"
                         onclick="favorite(this.getAttribute('movie-id'), this.getAttribute('movie-title'))" autofocus>Favorite</button>
+                        <a href="#" id="movieId" type="button"
+                        style="background-color: honeydew; font: bold 14px Helvetica; color: cornflowerblue;width: 150px;padding:15px"
+                        movie-id="<%- singlemoviearticle.id %>" movie-title="<%- singlemoviearticle.original_title %>"
+                        onclick="getTrailer(this.getAttribute('movie-id'))" autofocus>Play Trailer</a>
                     <% } else { %>
                         No posts found.
                         <% } %>

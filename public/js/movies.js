@@ -190,3 +190,29 @@ function searchMovie() {
     },
   });
 }
+
+function getTrailer(movieId) {
+  console.log("inside getTrailer: " + movieId);
+  var data = {id: movieId}
+  $.ajax({
+    url: "/movies/getTrailer",
+    type: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "access-token": window.localStorage.getItem("access-token"),
+      "refresh-token": window.localStorage.getItem("refresh-token"),
+      "id-token": window.localStorage.getItem("id-token"),
+    },
+    data: JSON.stringify(data),
+    success: function (result) {
+      console.log(JSON.stringify(result));
+      // just replace content.
+      var el = document.getElementById("content");
+      el.innerHTML = result;
+    },
+    error: function (response, msg, error) {
+      console.log("unable to load movie Trailer: " + JSON.stringify(error));
+      alert("unable to load movie Trailer! please try again!");
+    },
+  });
+}

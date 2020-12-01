@@ -80,6 +80,10 @@ Run Filebeat
 <img width="2560" alt="Screen Shot 2020-11-30 at 4 48 42 PM" src="https://user-images.githubusercontent.com/71044935/100682890-f14e8f80-332b-11eb-9f67-1eefd10110cf.png">
 
 ##### Chat Bot
+<img width="2560" alt="Screen Shot 2020-11-30 at 5 26 07 PM" src="https://user-images.githubusercontent.com/71044935/100685679-b0f21000-3331-11eb-9fa6-312d15cefec2.png">
+
+<img width="2560" alt="Screen Shot 2020-11-30 at 5 27 05 PM" src="https://user-images.githubusercontent.com/71044935/100685750-d0893880-3331-11eb-984f-c72390c13990.png">
+
 ##### Watch List 
 ##### Favorite List
 

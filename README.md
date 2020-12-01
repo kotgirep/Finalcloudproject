@@ -76,8 +76,14 @@ Run Filebeat
 <img width="2560" alt="Screen Shot 2020-11-30 at 4 46 45 PM" src="https://user-images.githubusercontent.com/71044935/100682783-b0567b00-332b-11eb-901a-455ca6180e57.png">
 
 
-##### Movie Details page 
-<img width="2560" alt="Screen Shot 2020-11-30 at 4 48 42 PM" src="https://user-images.githubusercontent.com/71044935/100682890-f14e8f80-332b-11eb-9f67-1eefd10110cf.png">
+##### Movie Details page
+<img width="2560" alt="Screen Shot 2020-12-01 at 2 28 40 PM" src="https://user-images.githubusercontent.com/71044935/100805361-60d38600-33e3-11eb-9888-7afa55581e0c.png">
+
+
+##### Movie Trailer page
+<img width="2560" alt="Screen Shot 2020-12-01 at 2 28 50 PM" src="https://user-images.githubusercontent.com/71044935/100805190-19e59080-33e3-11eb-810f-28d165acfe89.png">
+
+<img width="2560" alt="Screen Shot 2020-12-01 at 2 29 08 PM" src="https://user-images.githubusercontent.com/71044935/100805230-2bc73380-33e3-11eb-8f46-c7be0a113f27.png">
 
 ##### Chat Bot
 <img width="2560" alt="Screen Shot 2020-11-30 at 5 26 07 PM" src="https://user-images.githubusercontent.com/71044935/100685679-b0f21000-3331-11eb-9fa6-312d15cefec2.png">

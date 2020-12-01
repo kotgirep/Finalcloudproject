@@ -84,8 +84,11 @@ Run Filebeat
 
 <img width="2560" alt="Screen Shot 2020-11-30 at 5 27 05 PM" src="https://user-images.githubusercontent.com/71044935/100685750-d0893880-3331-11eb-984f-c72390c13990.png">
 
-##### Watch List 
+##### Watch List
+<img width="1280" alt="Screen Shot 2020-11-30 at 9 25 19 PM" src="https://user-images.githubusercontent.com/68761598/100701846-4783f880-3355-11eb-946b-6337fff3385a.png">
+
 ##### Favorite List
+<img width="1279" alt="Screen Shot 2020-11-30 at 9 23 41 PM" src="https://user-images.githubusercontent.com/68761598/100701732-11467900-3355-11eb-9448-ac6bd18829a3.png">
 
 
 ##### Application monitoring through Kibana
